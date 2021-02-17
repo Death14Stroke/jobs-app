@@ -1,21 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import AuthScreen from './src/screens/AuthScreen';
+import DeckScreen from './src/screens/DeckScreen';
+import MapScreen from './src/screens/MapScreen';
+import ReviewScreen from './src/screens/ReviewScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import SplashScreen from './src/screens/SplashScreen';
+import WelcomeScreen from './src/screens/WelcomeScreen';
+import { Provider as AuthProvider } from './src/context/AuthContext';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const navigator = createSwitchNavigator({
+	Splash: SplashScreen,
+	Welcome: WelcomeScreen,
+	Auth: AuthScreen,
+	mainFlow: createBottomTabNavigator({
+		Map: MapScreen,
+		Deck: DeckScreen,
+		reviewFlow: createStackNavigator({
+			Review: ReviewScreen,
+			Settings: SettingsScreen
+		})
+	})
 });
+
+const App = createAppContainer(navigator);
+
+export default () => {
+	return (
+		<AuthProvider>
+			<App />
+		</AuthProvider>
+	);
+};
